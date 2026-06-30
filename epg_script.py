@@ -7,7 +7,7 @@ import time
 channel_list = [2, 3, 4, 5, 7, 10, 16, 18, 22, 23, 24, 25, 27, 29, 30, 31, 32, 33, 34, 35, 36, 101, 103, 104, 105, 106, 107, 109, 110, 111, 112, 503, 521, 523, 301, 302, 303, 304, 306, 205, 206, 210, 222, 202]
 
 # 2. สร้างโครงสร้าง XMLTV ตัวหลัก
-tv = ET.Element("tv", {"generator-info-name": "3BB GigaTV Auto Generator"})
+tv = ET.Element("tv", {"generator-info-name": "TV Auto Generator"})
 
 print("--- เริ่มต้นการดึงข้อมูล EPG ---")
 
@@ -28,7 +28,7 @@ for ch_num in channel_list:
 
         # สร้างหัวข้อช่อง <channel> (ดึงจากไอเทมแรก)
         first_item = data[0]
-        ch_id = f"3bb.ch{first_item['channelID']}"
+        ch_id = f"ch{first_item['channelID']}"
         ch_name = first_item['channelName']
         
         channel_el = ET.SubElement(tv, "channel", id=ch_id)
@@ -60,5 +60,5 @@ for ch_num in channel_list:
 
 # 3. บันทึกไฟล์ทั้งหมดรวมกันเป็น 3bb_epg.xml
 tree = ET.ElementTree(tv)
-tree.write("3bb_epg.xml", encoding="utf-8", xml_declaration=True)
-print("--- ดึงข้อมูลสำเร็จ! สร้างไฟล์ 3bb_epg.xml เรียบร้อย ---")
+tree.write("TV_epg.xml", encoding="utf-8", xml_declaration=True)
+print("--- ดึงข้อมูลสำเร็จ! สร้างไฟล์ TV_epg.xml เรียบร้อย ---")
