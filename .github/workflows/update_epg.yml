@@ -2,7 +2,7 @@ name: Update My M3U Playlist
 
 on:
   schedule:
-    # รันอัตโนมัติทุกวัน เวลา 00:00 น. (เวลา UTC)
+    # รันอัตโนมัติทุกวัน เวลา 00:00 น. (เวลา UTC) หรือ 07:00 น. เวลาไทย
     - cron: '0 0 * * *'
   workflow_dispatch: # ปุ่มกดรันเองแบบ Manual
 
@@ -26,12 +26,12 @@ jobs:
         pip install requests
 
     - name: Run script
-      run: python filter_m3u.py
+      run: python epg_auto.py # 👈 เปลี่ยนให้ตรงกับชื่อไฟล์ Python ของคุณ
 
     - name: Commit and Push changes
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add my_playlist.m3u
-        git commit -m "Update playlist channels" || exit 0
+        git add TV_epg.xml # 👈 เปลี่ยนเป็นชื่อไฟล์ XML ที่สคริปต์สร้างออกมา
+        git commit -m "Update EPG data" || exit 0 # หากไม่มีการเปลี่ยนแปลงจะข้ามไป ไม่สั่งให้ Actions ขึ้นสีแดง
         git push
