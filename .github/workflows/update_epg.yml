@@ -28,10 +28,17 @@ jobs:
     - name: Run script
       run: python epg_script.py # 👈 เปลี่ยนให้ตรงกับชื่อไฟล์ Python ของคุณ
 
-    - name: Commit and Push changes
+- name: Commit and Push changes
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add TV_epg.xml # 👈 เปลี่ยนเป็นชื่อไฟล์ XML ที่สคริปต์สร้างออกมา
-        git commit -m "Update EPG data" || exit 0 # หากไม่มีการเปลี่ยนแปลงจะข้ามไป ไม่สั่งให้ Actions ขึ้นสีแดง
-        git push
+        
+        # ตรวจสอบว่ามีความเปลี่ยนแปลงในระบบจริงไหม
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "พบข้อมูลอัปเดตใหม่ กำลังบันทึก..."
+          git add .
+          git commit -m "Update EPG and Playlist [skip ci]"
+          git push
+        else
+          echo "ข้อมูลเหมือนเดิม ไม่มีอะไรเปลี่ยนแปลง จบบทบาทชั่วคราว"
+        fi
