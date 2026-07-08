@@ -4,13 +4,13 @@ on:
   schedule:
     # รันอัตโนมัติทุกวัน เวลา 00:00 น. (เวลา UTC) หรือ 07:00 น. เวลาไทย
     - cron: '0 0 * * *'
-  workflow_dispatch: # ปุ่มกดรันเองแบบ Manual
+  workflow_dispatch: # ปุ่มกดรันเองแบบ Manual ได้ตลอดเวลา
 
 jobs:
   update-playlist:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # อนุญาตให้บอทเขียนไฟล์ลง Repo ได้
+      contents: write # อนุญาตให้บอท GitHub Actions เขียนไฟล์และ Push ลง Repo ได้
 
     steps:
     - name: Checkout code
@@ -26,19 +26,20 @@ jobs:
         pip install requests
 
     - name: Run script
-      run: python epg_script.py # 👈 เปลี่ยนให้ตรงกับชื่อไฟล์ Python ของคุณ
+      run: python epg_script.py # 👈 มั่นใจว่าชื่อไฟล์ตรงกับโค้ด Python ของคุณ
 
-- name: Commit and Push changes
+    - name: Commit and Push changes
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         
-        # ตรวจสอบว่ามีความเปลี่ยนแปลงในระบบจริงไหม
+        # ตรวจสอบว่าไฟล์ TV_epg.xml มีการอัปเดตหรือเปลี่ยนแปลงจริงไหม
+        git add TV_epg.xml
+        
         if [ -n "$(git status --porcelain)" ]; then
-          echo "พบข้อมูลอัปเดตใหม่ กำลังบันทึก..."
-          git add .
-          git commit -m "Update EPG and Playlist [skip ci]"
+          echo "พบข้อมูล EPG อัปเดตใหม่ กำลังบันทึก..."
+          git commit -m "Update EPG data [skip ci]"
           git push
         else
-          echo "ข้อมูลเหมือนเดิม ไม่มีอะไรเปลี่ยนแปลง จบบทบาทชั่วคราว"
+          echo "ข้อมูลเหมือนเดิม ไม่มีอะไรเปลี่ยนแปลง ไม่ต้อง Commit"
         fi
