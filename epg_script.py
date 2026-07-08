@@ -35,7 +35,7 @@ for ch_num in channel_list:
         display_name = ET.SubElement(channel_el, "display-name", lang="th")
         display_name.text = ch_name
 
-        # วนลูปใส่รายการทีวีของช่องนั้นๆ <programme>
+# วนลูปใส่รายการทีวีของช่องนั้นๆ <programme>
         for item in data:
             try:
                 # แปลงเวลาให้อยู่ในฟอร์แมต XMLTV
@@ -50,6 +50,8 @@ for ch_num in channel_list:
                 desc = ET.SubElement(programme, "desc", lang="th")
                 desc.text = item.get('programName', '')
             except Exception as e:
+                # 💡 แก้ไขตรงนี้: พิมพ์ข้อผิดพลาดออกมาดู แทนที่จะกดข้ามไปเงียบ ๆ
+                print(f"⚠️ รายการในช่อง {ch_num} แปลงไม่ผ่านชั่วคราว: {e}")
                 continue
                 
         # หน่วงเวลานิดนึงเพื่อไม่ให้ยิงเซิร์ฟเวอร์ถี่เกินไป
